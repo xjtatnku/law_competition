@@ -14,7 +14,7 @@ from config import (ALL_FEATURES, TARGET, A_CLASS, B_CLASS, C_CLASS,
 plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei']
 plt.rcParams['axes.unicode_minus'] = False
 
-def train_decision_tree(df, features, model_name, max_depth=4):
+def train_decision_tree(df, features, model_name, max_depth=5):
     """
     训练决策树模型
     
@@ -39,11 +39,11 @@ def train_decision_tree(df, features, model_name, max_depth=4):
     print(f"样本数: {len(data)}")
     print(f"特征数: {len(features)}")
     
-    # 训练决策树
+    # 训练决策树 - 优化参数以避免过拟合
     dt = DecisionTreeClassifier(max_depth=max_depth, 
                                 random_state=RANDOM_STATE,
-                                min_samples_split=10,
-                                min_samples_leaf=5)
+                                min_samples_split=5,
+                                min_samples_leaf=3)
     dt.fit(X, y)
     
     # 预测
@@ -187,7 +187,7 @@ def compare_with_without_c(df):
     models = []
     
     # 模型1: 仅A+B类
-    model1 = train_decision_tree(df, A_CLASS + B_CLASS, "决策树1: A类+B类", max_depth=4)
+    model1 = train_decision_tree(df, A_CLASS + B_CLASS, "决策树1: A类+B类", max_depth=5)
     models.append(model1)
     model1['feature_importance'].to_csv(
         f"{RESULTS_DIR}/决策树_模型1_特征重要性.csv", 
@@ -197,7 +197,7 @@ def compare_with_without_c(df):
     
     # 模型2: A+B+C1
     model2 = train_decision_tree(df, A_CLASS + B_CLASS + ['C1'], 
-                                "决策树2: A类+B类+C1", max_depth=4)
+                                "决策树2: A类+B类+C1", max_depth=5)
     models.append(model2)
     model2['feature_importance'].to_csv(
         f"{RESULTS_DIR}/决策树_模型2_特征重要性.csv", 
@@ -207,7 +207,7 @@ def compare_with_without_c(df):
     
     # 模型3: A+B+C2
     model3 = train_decision_tree(df, A_CLASS + B_CLASS + ['C2'], 
-                                "决策树3: A类+B类+C2", max_depth=4)
+                                "决策树3: A类+B类+C2", max_depth=5)
     models.append(model3)
     model3['feature_importance'].to_csv(
         f"{RESULTS_DIR}/决策树_模型3_特征重要性.csv", 
@@ -217,7 +217,7 @@ def compare_with_without_c(df):
     
     # 模型4: 全部要素
     model4 = train_decision_tree(df, ALL_FEATURES, 
-                                "决策树4: 全部要素", max_depth=4)
+                                "决策树4: 全部要素", max_depth=5)
     models.append(model4)
     model4['feature_importance'].to_csv(
         f"{RESULTS_DIR}/决策树_模型4_特征重要性.csv", 
